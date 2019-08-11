@@ -11,7 +11,7 @@ form input {
   border: none;
   outline: none;
   border-bottom: 1px solid grey;
-  width: 40%;
+  width: 700px;
 }
 
 .btn {
@@ -34,4 +34,6 @@ form input {
 .Post-author {
   color: grey;
   margin-top: 10px;
+  font-size: 15px;
+  font-style: italic;
 }

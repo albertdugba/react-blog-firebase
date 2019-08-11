@@ -4,12 +4,24 @@ import moment from "moment";
 import { FaUser } from "react-icons/fa";
 import { FaClock } from "react-icons/fa";
 
-const Post = ({ title, body, displayName, createdAt }) => {
+const Post = ({
+  title,
+  body,
+  user,
+  displayName,
+  createdAt,
+  comments,
+  likes
+}) => {
   return (
     <article className="Post">
       <div className="Post--data">
         <h1>{title}</h1>
         <p>{body}</p>
+        <div className="PostComment">
+          <p>{comments}</p>
+          <span>{likes}</span>
+        </div>
 
         <div className="PostAction">
           <button>Delete</button>
@@ -20,7 +32,7 @@ const Post = ({ title, body, displayName, createdAt }) => {
           <p>
             {" "}
             <FaUser />
-            Posted by : {displayName}
+            Posted by : {user.displayName}
           </p>
           <span>
             <FaClock />
@@ -41,7 +53,9 @@ Post.defaultProps = {
     email: "evan@vuemail.com",
     photoURL: "https://www.fillmurray.com/300/300"
   },
-  createdAt: new Date()
+  createdAt: new Date(),
+  comments: 21,
+  likes: 2
 };
 
 export default Post;

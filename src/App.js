@@ -2,14 +2,15 @@ import React, { Component } from "react";
 import uuid from "uuid";
 
 import Posts from "./components/Posts";
+import { firestore } from "./database/firebase";
 
 class App extends Component {
   state = {
     posts: [
       {
-        id: "1",
+        id: uuid(),
         title: "A Very Hot Take",
-        content:
+        body:
           "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Perferendis suscipit repellendus modi unde cumque, fugit in ad necessitatibus eos sed quasi et! Commodi repudiandae tempora ipsum fugiat. Quam, officia excepturi!",
         user: {
           uid: "123",
@@ -17,13 +18,14 @@ class App extends Component {
           email: "billmurray@mailinator.com",
           photoURL: "https://www.fillmurray.com/300/300"
         },
-        stars: 1,
+        createdAt: new Date(),
+        likes: 1,
         comments: 47
       },
       {
-        id: "2",
+        id: uuid(),
         title: "The Sauciest of Opinions",
-        content:
+        body:
           "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Perferendis suscipit repellendus modi unde cumque, fugit in ad necessitatibus eos sed quasi et! Commodi repudiandae tempora ipsum fugiat. Quam, officia excepturi!",
         user: {
           uid: "456",
@@ -31,10 +33,21 @@ class App extends Component {
           email: "notbillmurray@mailinator.com",
           photoURL: "https://www.fillmurray.com/400/400"
         },
-        stars: 3,
+        createdAt: new Date(),
+        likes: 3,
         comments: 0
       }
     ]
+  };
+
+  componentDidMount = async () => {
+    const data = await firestore.collection("posts").get();
+    data.forEach(doc => {
+      const id = doc.id;
+      const data = doc.data();
+      console.log({ id, data });
+    });
+    // this.setState({ posts: data });
   };
 
   handleCreate = post => {
