@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import uuid from "uuid";
 
 import "../App.css";
+import { firestore } from "../database/firebase";
 
 class AddBlog extends Component {
   state = { title: "", body: "" };
@@ -13,7 +14,6 @@ class AddBlog extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    const { onCreate } = this.props;
     const { title, body } = this.state;
 
     const post = {
@@ -26,8 +26,8 @@ class AddBlog extends Component {
         photoURL: "http://placekitten.com/g/200/200"
       }
     };
-    onCreate(post);
-    this.setState({ title: "", body: "" });
+
+    firestore.collection("posts").add(post);
   };
   render() {
     const { title, body } = this.state;

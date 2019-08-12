@@ -9,39 +9,27 @@ class App extends Component {
     posts: []
   };
 
+  unsubscribe = null;
+
   componentDidMount = async () => {
-    const snapshot = await firestore.collection("posts").get();
-    const posts = snapshot.docs.map(collectIdsAndDocs);
+    this.unsubscribe = firestore.collection("posts").onSnapshot(snapshot => {
+      const posts = snapshot.docs.map(collectIdsAndDocs);
+      this.setState({ posts });
+    });
 
-    this.setState({ posts });
+    // this.setState({ posts });
   };
 
-  handleCreate = async post => {
-    const { posts } = this.state;
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
 
-    const docRef = await firestore.collection("posts").add(post);
-    const doc = await docRef.get();
-    const newPost = collectIdsAndDocs(doc);
-    this.setState({ posts: [...posts, newPost] });
-  };
-
-  handleRemove = async id => {
-    const allPosts = this.state.posts.filter(post => post.id !== id);
-    await firestore.doc(`posts/${id}`).delete();
-
-    this.setState({ posts: allPosts });
-    console.log(allPosts);
-  };
   render() {
     const { posts } = this.state;
     return (
       <div>
         <h1>Blog Application</h1>
-        <Posts
-          posts={posts}
-          onCreate={this.handleCreate}
-          onRemove={this.handleRemove}
-        />
+        <Posts posts={posts} />
       </div>
     );
   }

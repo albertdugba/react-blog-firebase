@@ -8,16 +8,12 @@ import { FaComment } from "react-icons/fa";
 import { FaTrashAlt } from "react-icons/fa";
 import { FaRegThumbsUp } from "react-icons/fa";
 
-const Post = ({
-  id,
-  title,
-  body,
-  user,
-  createdAt,
-  comments,
-  likes,
-  onRemove
-}) => {
+import { firestore } from "../database/firebase";
+
+const Post = ({ id, title, body, user, createdAt, comments, likes }) => {
+  const postRef = firestore.doc(`posts/${id}`);
+  const remove = () => postRef.delete();
+  const like = () => postRef.update({ likes: likes + 1 });
   return (
     <article className="Post">
       <div className="Post--data">
@@ -30,12 +26,15 @@ const Post = ({
             {comments}
           </span>
           <span>
-            <FaRegThumbsUp style={{ color: "blue", cursor: "pointer" }} />{" "}
+            <FaRegThumbsUp
+              onClick={like}
+              style={{ color: "blue", cursor: "pointer" }}
+            />{" "}
             Likes: {likes}
           </span>
           <span>
             <FaTrashAlt
-              onClick={() => onRemove(id)}
+              onClick={() => remove(id)}
               style={{ color: "red", cursor: "pointer" }}
             />
           </span>
