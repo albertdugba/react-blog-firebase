@@ -1,31 +1,44 @@
 import React from "react";
+
 import uuid from "uuid";
 import moment from "moment";
 import { FaUser } from "react-icons/fa";
 import { FaClock } from "react-icons/fa";
+import { FaComment } from "react-icons/fa";
+import { FaTrashAlt } from "react-icons/fa";
+import { FaRegThumbsUp } from "react-icons/fa";
 
 const Post = ({
+  id,
   title,
   body,
   user,
-  displayName,
   createdAt,
   comments,
-  likes
+  likes,
+  onRemove
 }) => {
   return (
     <article className="Post">
       <div className="Post--data">
         <h1>{title}</h1>
         <p>{body}</p>
-        <div className="PostComment">
-          <p>{comments}</p>
-          <span>{likes}</span>
-        </div>
 
         <div className="PostAction">
-          <button>Delete</button>
-          <button>Star</button>
+          <span>
+            <FaComment style={{ color: "teal", cursor: "pointer" }} /> Comments:{" "}
+            {comments}
+          </span>
+          <span>
+            <FaRegThumbsUp style={{ color: "blue", cursor: "pointer" }} />{" "}
+            Likes: {likes}
+          </span>
+          <span>
+            <FaTrashAlt
+              onClick={() => onRemove(id)}
+              style={{ color: "red", cursor: "pointer" }}
+            />
+          </span>
         </div>
 
         <div className="Post-author">

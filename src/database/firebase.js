@@ -19,4 +19,7 @@ export const firestore = firebase.firestore();
 export const auth = firebase.auth();
 export const provider = new firebase.auth.GoogleAuthProvider();
 
+// firestore.settings({ timestampsInSnapshots: true });
+window.firebase = firebase;
+
 export default firebase;

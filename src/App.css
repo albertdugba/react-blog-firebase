@@ -12,28 +12,49 @@ form input {
   outline: none;
   border-bottom: 1px solid grey;
   width: 700px;
+  font-size: 1rem;
 }
 
 .btn {
   margin-top: 10px;
+  padding: 0.7rem 0.7rem;
+  outline: none;
+  border: none;
+  border: 2px solid teal;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-radius: 6px;
+}
+
+.btn:hover {
+  transition: all 0.4s ease-in-out;
+  background: teal;
+  color: #fff;
 }
 
 .Post {
   text-align: left;
   padding: 0.6rem;
-  border: 2px solid grey;
+  border: 2px solid teal;
   border-radius: 7px;
   margin-top: 12px;
 }
 
 .Post--data h1 {
-  color: rgb(0, 174, 255);
+  color: teal;
   padding: 0.3rem;
 }
 
 .Post-author {
   color: grey;
   margin-top: 10px;
-  font-size: 15px;
+  font-size: 0.9rem;
   font-style: italic;
+}
+
+.PostAction {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 0.4rem;
 }

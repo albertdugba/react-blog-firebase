@@ -1,65 +1,47 @@
 import React, { Component } from "react";
-import uuid from "uuid";
 
 import Posts from "./components/Posts";
 import { firestore } from "./database/firebase";
+import { collectIdsAndDocs } from "./config/utils";
 
 class App extends Component {
   state = {
-    posts: [
-      {
-        id: uuid(),
-        title: "A Very Hot Take",
-        body:
-          "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Perferendis suscipit repellendus modi unde cumque, fugit in ad necessitatibus eos sed quasi et! Commodi repudiandae tempora ipsum fugiat. Quam, officia excepturi!",
-        user: {
-          uid: "123",
-          displayName: "Bill Murray",
-          email: "billmurray@mailinator.com",
-          photoURL: "https://www.fillmurray.com/300/300"
-        },
-        createdAt: new Date(),
-        likes: 1,
-        comments: 47
-      },
-      {
-        id: uuid(),
-        title: "The Sauciest of Opinions",
-        body:
-          "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Perferendis suscipit repellendus modi unde cumque, fugit in ad necessitatibus eos sed quasi et! Commodi repudiandae tempora ipsum fugiat. Quam, officia excepturi!",
-        user: {
-          uid: "456",
-          displayName: "Mill Burray",
-          email: "notbillmurray@mailinator.com",
-          photoURL: "https://www.fillmurray.com/400/400"
-        },
-        createdAt: new Date(),
-        likes: 3,
-        comments: 0
-      }
-    ]
+    posts: []
   };
 
   componentDidMount = async () => {
-    const data = await firestore.collection("posts").get();
-    data.forEach(doc => {
-      const id = doc.id;
-      const data = doc.data();
-      console.log({ id, data });
-    });
-    // this.setState({ posts: data });
+    const snapshot = await firestore.collection("posts").get();
+    const posts = snapshot.docs.map(collectIdsAndDocs);
+
+    this.setState({ posts });
   };
 
-  handleCreate = post => {
+  handleCreate = async post => {
     const { posts } = this.state;
-    this.setState({ posts: [...posts, post] });
+
+    const docRef = await firestore.collection("posts").add(post);
+    const doc = await docRef.get();
+    const newPost = collectIdsAndDocs(doc);
+    this.setState({ posts: [...posts, newPost] });
+  };
+
+  handleRemove = async id => {
+    const allPosts = this.state.posts.filter(post => post.id !== id);
+    await firestore.doc(`posts/${id}`).delete();
+
+    this.setState({ posts: allPosts });
+    console.log(allPosts);
   };
   render() {
     const { posts } = this.state;
     return (
       <div>
         <h1>Blog Application</h1>
-        <Posts posts={posts} onCreate={this.handleCreate} />
+        <Posts
+          posts={posts}
+          onCreate={this.handleCreate}
+          onRemove={this.handleRemove}
+        />
       </div>
     );
   }
